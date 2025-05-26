@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>選擇導覽路線</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- 簡單的天空背景，可以換成360圖片 -->
+      <a-sky src="2.jpg"></a-sky>
+      <!-- 文字說明 -->
+      <a-text
+        value="選擇您的導覽路線"
+        position="0 2.5 -4"
+        align="center"
+        color="black"
+        width="6"
+      ></a-text>
+
+      <!-- 360導覽按鈕 -->
+      <a-plane
+        position="-1.5 1.5 -4"
+        width="2"
+        height="1"
+        color="#FF5722"
+        cursor-listener
+      >
+        <a-text
+          value="The 360 Tour"
+          align="center"
+          color="white"
+          position="0 0 0.1"
+          width="4"
+        ></a-text>
+      </a-plane>
+
+      <!-- 360參拜路線按鈕 -->
+      <a-plane
+        position="1.5 1.5 -4"
+        width="2"
+        height="1"
+        color="#3F51B5"
+        cursor-listener
+      >
+        <a-text
+          value="Pilgrimage Route guide"
+          align="center"
+          color="white"
+          position="0 0 0.1"
+          width="4"
+        ></a-text>
+      </a-plane>
+
+      <!-- 簡單的視線互動 -->
+      <a-entity camera look-controls wasd-controls position="0 1.6 0">
+        <a-cursor></a-cursor>
+      </a-entity>
+
+      <script>
+        // 點擊事件邏輯
+        AFRAME.registerComponent("cursor-listener", {
+          init: function () {
+            this.el.addEventListener("click", (evt) => {
+              const text = this.el
+                .querySelector("a-text")
+                .getAttribute("value");
+              if (text.includes("The 360 Tour")) {
+                window.location.href = "360導覽/index.html";
+              } else if (text.includes("Pilgrimage Route guide")) {
+                window.location.href = "vr_t/index.html";
+              }
+            });
+          },
+        });
+      </script>
+    </a-scene>
+  </body>
+</html>
