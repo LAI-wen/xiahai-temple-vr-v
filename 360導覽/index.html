@@ -6,9 +6,41 @@
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   </head>
   <body>
+    <!-- 小地圖 HUD（固定在畫面右下角） -->
+    <div
+      id="mapOverlay"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 180px;
+        height: 240px;
+        background-image: url('mini_map.png');
+        background-size: cover;
+        border: 2px solid #fff;
+        border-radius: 8px;
+        z-index: 10;
+      "
+    >
+      <!-- 位置指示點 -->
+      <div
+        id="mapIndicator"
+        style="
+          position: absolute;
+          width: 14px;
+          height: 14px;
+          background: red;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          top: 50%;
+          left: 50%;
+        "
+      ></div>
+    </div>
     <a-scene cursor="rayOrigin: mouse" vr-mode-ui="enabled: true">
       <a-assets>
         <!-- 圖片資源 -->
+        <img id="miniMap" src="mini_map.png" />
         <img id="img1" src="1.jpg" />
         <img id="img2" src="2.jpg" />
         <img id="img3" src="3.jpg" />
@@ -220,10 +252,7 @@
             hotspots.appendChild(video);
 
             let toggleButton = document.createElement("a-image");
-            toggleButton.setAttribute(
-              "src",
-              "https://cdn-icons-png.flaticon.com/512/10257/10257610.png"
-            );
+            toggleButton.setAttribute("src", "start.png");
             toggleButton.setAttribute(
               "position",
               scene.positions.videoButton || "0 0 -2.8"
@@ -238,17 +267,11 @@
               const videoEl = document.querySelector(scene.video);
               if (!isPlaying) {
                 videoEl.play();
-                toggleButton.setAttribute(
-                  "src",
-                  "https://cdn-icons-png.flaticon.com/512/10346/10346974.png"
-                );
+                toggleButton.setAttribute("src", "Suspend.png");
                 isPlaying = true;
               } else {
                 videoEl.pause();
-                toggleButton.setAttribute(
-                  "src",
-                  "https://cdn-icons-png.flaticon.com/512/10257/10257610.png"
-                );
+                toggleButton.setAttribute("src", "start.png");
                 isPlaying = false;
               }
             });
@@ -257,10 +280,7 @@
           }
           if (scene.desc) {
             let infoButton = document.createElement("a-image");
-            infoButton.setAttribute(
-              "src",
-              "https://cdn-icons-png.flaticon.com/512/656/656794.png"
-            );
+            infoButton.setAttribute("src", "Inf.png");
             infoButton.setAttribute(
               "position",
               scene.positions.descButton || "-0.8 0 -2.8"
@@ -309,6 +329,30 @@
             hotspots.appendChild(descImage);
             hotspots.appendChild(closeButton);
           }
+          function updateMapIndicator(id) {
+            const mapIndicator = document.getElementById("mapIndicator");
+
+            const mapPositions = {
+              1: [70, 85], // 外景1
+              2: [25, 75], // 天公爐40, 80
+              3: [30, 60], // 辦事處30, 60
+              4: [25, 40], // 正殿25, 40
+              5: [65, 25], // 廟埕
+              6: [85, 25], // 城隍夫人
+              7: [65, 15], // 義勇公
+              8: [85, 35], // 觀音佛祖
+              9: [65, 50], // 金紙舖65, 60 65, 50
+              10: [70, 70], // 點香處
+            };
+
+            const pos = mapPositions[id];
+            if (pos) {
+              mapIndicator.style.left = `${pos[0]}%`;
+              mapIndicator.style.top = `${pos[1]}%`;
+            }
+          }
+
+          updateMapIndicator(id);
         }
 
         loadScene("1");
